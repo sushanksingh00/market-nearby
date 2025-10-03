@@ -1,73 +1,54 @@
-# Welcome to your Lovable project
+# 🛍️ Market Nearby App
 
-## Project info
+**Market Nearby** is a Django-based web application that helps users find shops and daily-use items available **within a 10 km range** of their location. It saves time by allowing users to **check item availability before visiting**, eliminating the need to go from shop to shop.
 
-**URL**: https://lovable.dev/projects/c655d0d9-a724-4c3d-8d7c-9270fe702b91
+Built with **Django (Python)**, **SQLite3**, **HTML/CSS**, and designed to support **three user roles**: Customer, Shopkeeper, and Admin.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 Features
 
-**Use Lovable**
+### 👤 Customer
+- View nearby shops (within 10 km)
+- Filter and search products by name, category, or shop
+- Check availability of specific items in real-time
+- View and edit profile
+- Give ratings to shops and products
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c655d0d9-a724-4c3d-8d7c-9270fe702b91) and start prompting.
+### 🧑‍💼 Shopkeeper
+- Manage their own shop profile
+- Add/update items and product photos
+- Maintain and update their inventory in real-time
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🛡️ Admin
+- Verify whether shops are real or fake
+- Add or remove shops from the platform
+- Monitor app activity and usage
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🛠️ Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+| Technology   | Purpose                      |
+|--------------|-------------------------------|
+| Django       | Backend framework (Python)    |
+| SQLite3      | Lightweight relational database |
+| HTML & CSS   | Frontend design and structure |
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 📌 Future Improvements
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- 📍 **Location-Based Auto-Detection**  
+  Automatically detect user’s location to show relevant nearby shops without manual input.
 
-# Step 3: Install the necessary dependencies.
-npm i
+- 🗺️ **Google Maps API Integration**  
+  Show directions to the selected shop directly on an interactive map.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+- 📬 **Push/Email Notifications**  
+  Notify users when shops update their inventory or when new products are added.
 
-**Edit a file directly in GitHub**
+- 📊 **Admin Analytics Dashboard**  
+  Admin panel showing usage statistics, top-performing shops, and customer engagement data.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/c655d0d9-a724-4c3d-8d7c-9270fe702b91) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
