@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ shop.name }} - Vstash{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'shops:index' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'shops:shop_list' %}">Shops</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ shop.name }}</li>
+    </ol>
+  </nav>
+
+  <!-- Shop header -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="row g-0">
+      <div class="col-md-4">
+        {% if shop.image %}
+          <img src="{{ shop.image.url }}" alt="{{ shop.name }}" class="img-fluid rounded-start w-100 h-100" style="object-fit: cover;">
+        {% else %}
+          <div class="bg-light d-flex align-items-center justify-content-center rounded-start w-100 h-100" style="min-height: 220px;">
+            <i class="fas fa-store fa-3x text-muted"></i>
+          </div>
+        {% endif %}
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <div class="d-flex align-items-start justify-content-between">
+            <h1 class="h3 mb-2">{{ shop.name }}</h1>
+            {% if shop.is_open %}
+              <span class="badge bg-success">Open</span>
+            {% else %}
+              <span class="badge badge-out-of-stock">Closed</span>
+            {% endif %}
+          </div>
+
+          <div class="d-flex align-items-center mb-2">
+            <div class="rating me-2">
+              {% for i in "12345" %}
+                {% if forloop.counter <= shop.rating %}
+                  <i class="fas fa-star rating-star"></i>
+                {% else %}
+                  <i class="far fa-star rating-star"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <small class="text-muted">({{ shop.rating }})</small>
+          </div>
+
+          <p class="mb-2 text-muted"><i class="fas fa-map-marker-alt me-2"></i>{{ shop.address }}</p>
+          <p class="mb-3 text-muted"><i class="fas fa-phone me-2"></i>{{ shop.phone }}</p>
+
+          <div class="mb-2">
+            {% for sc in shop.categories.all %}
+              <span class="badge bg-light text-dark me-1">{{ sc.category.name }}</span>
+            {% empty %}
+              <span class="text-muted">No categories</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products from this shop -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Items available</h2>
+    <a href="{% url 'shops:product_list' %}?shop={{ shop.id }}" class="btn btn-outline-primary btn-sm">View all</a>
+  </div>
+
+  <div class="row g-4">
+    {% for product in products %}
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card product-card border-0 shadow-sm h-100">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+          {% else %}
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+              <i class="fas fa-box fa-3x text-muted"></i>
+            </div>
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title">{{ product.name }}</h6>
+            <p class="text-muted small mb-2">{{ product.category.name }}</p>
+
+            <div class="d-flex align-items-center mb-2">
+              <div class="rating me-2">
+                {% for i in "12345" %}
+                  {% if forloop.counter <= product.rating %}
+                    <i class="fas fa-star rating-star"></i>
+                  {% else %}
+                    <i class="far fa-star rating-star"></i>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <small class="text-muted">({{ product.rating }})</small>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <div>
+                <span class="fw-bold text-success">₹{{ product.price }}</span>
+                {% if product.original_price %}
+                  <small class="text-muted text-decoration-line-through ms-1">₹{{ product.original_price }}</small>
+                  <span class="badge badge-discount ms-1">{{ product.discount_percentage }}% OFF</span>
+                {% endif %}
+              </div>
+              {% if product.in_stock %}
+                <span class="badge bg-success">In Stock</span>
+              {% else %}
+                <span class="badge badge-out-of-stock">Out of Stock</span>
+              {% endif %}
+            </div>
+
+            <div class="mt-auto">
+              <a href="{% url 'shops:product_detail' product.pk %}" class="btn btn-primary btn-sm w-100">View Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="text-center py-5">
+          <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+          <h5>No items available</h5>
+          <p class="text-muted">This shop hasn't added any products yet.</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Reviews -->
+  {% if reviews %}
+  <div class="mt-5">
+    <h3 class="h5 mb-3">Recent reviews</h3>
+    <div class="list-group">
+      {% for review in reviews %}
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between">
+            <strong>@{{ review.user.username }}</strong>
+            <span class="rating-star">{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</span>
+          </div>
+          {% if review.comment %}
+            <p class="mb-0 mt-2">{{ review.comment }}</p>
+          {% endif %}
+          <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

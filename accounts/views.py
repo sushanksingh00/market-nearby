@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django import forms
+from .forms import ProfileForm
 
 User = get_user_model()
 
@@ -100,4 +101,12 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'accounts/profile.html', {'user': request.user})
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('accounts:profile')
+    else:
+        form = ProfileForm(instance=request.user)
+    return render(request, 'accounts/profile.html', {'form': form})

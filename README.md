@@ -1,6 +1,6 @@
-# 🛍️ Market Nearby App
+# 🛍️ Vstash App
 
-**Market Nearby** is a Django-based web application that helps users find shops and daily-use items available **within a 10 km range** of their location. It saves time by allowing users to **check item availability before visiting**, eliminating the need to go from shop to shop.
+**Vstash** is a Django-based web application that helps users find shops and daily-use items available **within a 10 km range** of their location. It saves time by allowing users to **check item availability before visiting**, eliminating the need to go from shop to shop.
 
 Built with **Django (Python)**, **SQLite3**, **HTML/CSS**, and designed to support **three user roles**: Customer, Shopkeeper, and Admin.
 

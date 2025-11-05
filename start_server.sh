@@ -1,7 +1,7 @@
 #!/bin/bash
 # Django development server startup script
 
-echo "🚀 Starting Market Nearby Django Server..."
+echo "🚀 Starting Vstash Django Server..."
 echo "📍 Working directory: $(pwd)"
 
 # Activate virtual environment

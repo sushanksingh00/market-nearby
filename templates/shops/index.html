@@ -20,7 +20,7 @@
                                placeholder="Enter location..." value="{{ location }}">
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-warning btn-lg px-4">
+                        <button type="submit" class="btn btn-primary btn-lg px-4">
                             <i class="fas fa-search me-2"></i>Search
                         </button>
                     </div>
@@ -179,13 +179,13 @@
                                 <span class="fw-bold text-success">₹{{ product.price }}</span>
                                 {% if product.original_price %}
                                     <small class="text-muted text-decoration-line-through ms-1">₹{{ product.original_price }}</small>
-                                    <span class="badge bg-warning text-dark ms-1">{{ product.discount_percentage }}% OFF</span>
+                                    <span class="badge badge-discount ms-1">{{ product.discount_percentage }}% OFF</span>
                                 {% endif %}
                             </div>
                             {% if product.in_stock %}
                                 <span class="badge bg-success">In Stock</span>
                             {% else %}
-                                <span class="badge bg-danger">Out of Stock</span>
+                                <span class="badge badge-out-of-stock">Out of Stock</span>
                             {% endif %}
                         </div>
                         

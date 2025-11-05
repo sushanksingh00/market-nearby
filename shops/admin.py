@@ -1,6 +1,10 @@
 from django.contrib import admin
 from .models import Shop, Category, ShopCategory, Product, Review
 
+# admin.site.site_header = "Vstash Admin"
+admin.site.site_title = "Vstash Admin Portal"
+admin.site.index_title = "Welcome to Vstash Administration"
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')

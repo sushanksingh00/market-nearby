@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Select Shop - Vstash{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h1 class="h4 mb-4">Select a shop</h1>
+          <p class="text-muted">Choose which shop you want to {{ action|default:'proceed with'|lower }}.</p>
+          <div class="list-group">
+            {% for s in shops %}
+              <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="{{ target_url }}?shop={{ s.id }}">
+                <span class="fw-semibold">{{ s.name }}</span>
+                <i class="fas fa-chevron-right text-muted"></i>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

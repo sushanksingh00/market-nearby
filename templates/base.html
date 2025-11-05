@@ -3,101 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Market Nearby - Find Local Markets & Products{% endblock %}</title>
+    <title>{% block title %}Vstash - Find Local Markets & Products{% endblock %}</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --primary-color: #2563eb;
-            --secondary-color: #10b981;
-            --accent-color: #f59e0b;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --background-light: #f9fafb;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: var(--text-dark);
-        }
-        
-        .gradient-hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        }
-        
-        .gradient-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        }
-        
-        .shadow-glow {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        
-        .btn-primary {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-primary:hover {
-            background: #1d4ed8;
-            border-color: #1d4ed8;
-        }
-        
-        .btn-success {
-            background: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-        
-        .btn-success:hover {
-            background: #059669;
-            border-color: #059669;
-        }
-        
-        .card {
-            transition: transform 0.2s ease-in-out;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        
-        .hero-section {
-            padding: 100px 0;
-            color: white;
-        }
-        
-        .rating {
-            color: #fbbf24;
-        }
-        
-        .badge-open {
-            background-color: var(--secondary-color);
-        }
-        
-        .badge-closed {
-            background-color: #dc2626;
-        }
-        
-        .product-card .card-img-top {
-            height: 200px;
-            object-fit: cover;
-        }
-        
-        .shop-card .card-img-top {
-            height: 250px;
-            object-fit: cover;
-        }
-    </style>
-    
+    <!-- Custom Theme CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -105,7 +19,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand text-primary" href="{% url 'shops:index' %}">
-                <i class="fas fa-store me-2"></i>Market Nearby
+                <i class="fas fa-store me-2"></i>Vstash
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -134,7 +48,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
                                 {% if user.user_type == 'shopkeeper' %}
-                                    <li><a class="dropdown-item" href="/admin/">Shop Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'shops:dashboard' %}">Shop Dashboard</a></li>
                                 {% endif %}
                                 {% if user.is_staff %}
                                     <li><a class="dropdown-item" href="/admin/">Admin Panel</a></li>
@@ -148,7 +62,7 @@
                             <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary text-white ms-2 px-3" href="{% url 'accounts:register' %}">Register</a>
+                            <a class="nav-link btn btn-primary ms-2 px-3" href="{% url 'accounts:register' %}">Register</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -177,7 +91,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5><i class="fas fa-store me-2"></i>Market Nearby</h5>
+                    <h5><i class="fas fa-store me-2"></i>Vstash</h5>
                     <p>Connecting you with local markets and fresh products in your neighborhood.</p>
                 </div>
                 <div class="col-md-4">
@@ -190,13 +104,13 @@
                 </div>
                 <div class="col-md-4">
                     <h5>Contact Info</h5>
-                    <p><i class="fas fa-envelope me-2"></i>info@marketnearby.com</p>
+                    <p><i class="fas fa-envelope me-2"></i>name@vstash.com</p>
                     <p><i class="fas fa-phone me-2"></i>+91 12345 67890</p>
                 </div>
             </div>
             <hr>
             <div class="text-center">
-                <p>&copy; 2024 Market Nearby. All rights reserved.</p>
+                <p>&copy; 2025 Vstash . All rights reserved.</p>
             </div>
         </div>
     </footer>
