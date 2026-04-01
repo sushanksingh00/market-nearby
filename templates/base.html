@@ -37,6 +37,18 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'shops:product_list' %}">Products</a>
                     </li>
+                    {% if not user.is_authenticated or user.user_type != 'shopkeeper' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'shops:cart_detail' %}">Cart</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'shops:orders_list' %}">Orders</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'shops:shop_orders' %}">Orders</a>
+                        </li>
+                    {% endif %}
                 </ul>
                 
                 <ul class="navbar-nav">

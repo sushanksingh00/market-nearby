@@ -88,6 +88,15 @@ def register_view(request):
             user = form.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
+
+            # If a shopkeeper registers, take them directly to shop onboarding.
+            if user.user_type == 'shopkeeper':
+                raw_password = form.cleaned_data.get('password1')
+                authed = authenticate(request, username=username, password=raw_password)
+                if authed is not None:
+                    login(request, authed)
+                    return redirect('shops:shop_create')
+
             return redirect('accounts:login')
     else:
         form = CustomUserCreationForm()

@@ -118,6 +118,23 @@
                     
                     <div class="mt-auto">
                         <a href="{% url 'shops:product_detail' product.pk %}" class="btn btn-primary btn-sm w-100">View Details</a>
+                                                {% if product.in_stock %}
+                                                    {% if not user.is_authenticated or user.user_type != 'shopkeeper' %}
+                                                        {% if product.can_order %}
+                                                            <form method="post" action="{% url 'shops:cart_add' product.id %}" class="mt-2">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="quantity" value="1">
+                                                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                                                <button type="submit" class="btn btn-outline-primary btn-sm w-100">Add to Cart</button>
+                                                            </form>
+                                                        {% else %}
+                                                            <button type="button" class="btn btn-outline-secondary btn-sm w-100 mt-2" disabled>Add to Cart</button>
+                                                            {% if product.order_block_reason %}
+                                                                <div class="small text-muted mt-1">{{ product.order_block_reason }}</div>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
                     </div>
                 </div>
             </div>

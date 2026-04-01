@@ -52,6 +52,21 @@
           <p class="mb-2 text-muted"><i class="fas fa-map-marker-alt me-2"></i>{{ shop.address }}</p>
           <p class="mb-3 text-muted"><i class="fas fa-phone me-2"></i>{{ shop.phone }}</p>
 
+          <div class="mb-3">
+            <div class="small text-muted">Order options</div>
+            <div class="mt-1">
+              {% if shop.offers_delivery %}
+                <span class="badge bg-light text-dark me-1">Delivery: ₹{{ shop.delivery_charge_per_km }}/km</span>
+              {% endif %}
+              {% if shop.offers_pickup %}
+                <span class="badge bg-light text-dark me-1">Pickup available</span>
+              {% endif %}
+              {% if not shop.offers_delivery and not shop.offers_pickup %}
+                <span class="text-muted">Not specified</span>
+              {% endif %}
+            </div>
+          </div>
+
           <div class="mb-2">
             {% for sc in shop.categories.all %}
               <span class="badge bg-light text-dark me-1">{{ sc.category.name }}</span>
@@ -115,6 +130,23 @@
 
             <div class="mt-auto">
               <a href="{% url 'shops:product_detail' product.pk %}" class="btn btn-primary btn-sm w-100">View Details</a>
+              {% if product.in_stock %}
+                {% if not user.is_authenticated or user.user_type != 'shopkeeper' %}
+                  {% if can_order %}
+                    <form method="post" action="{% url 'shops:cart_add' product.id %}" class="mt-2">
+                      {% csrf_token %}
+                      <input type="hidden" name="quantity" value="1">
+                      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                      <button type="submit" class="btn btn-outline-primary btn-sm w-100">Add to Cart</button>
+                    </form>
+                  {% else %}
+                    <button type="button" class="btn btn-outline-secondary btn-sm w-100 mt-2" disabled>Add to Cart</button>
+                    {% if order_block_reason %}
+                      <div class="small text-muted mt-1">{{ order_block_reason }}</div>
+                    {% endif %}
+                  {% endif %}
+                {% endif %}
+              {% endif %}
             </div>
           </div>
         </div>

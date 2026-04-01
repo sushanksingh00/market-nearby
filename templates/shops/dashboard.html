@@ -10,6 +10,32 @@
     <a href="{% url 'shops:product_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Add Product</a>
   </div>
 
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-2 align-items-center">
+        <div class="col-md-8">
+          <div class="fw-semibold mb-1">Order options</div>
+          <div>
+            {% if shop.offers_delivery %}
+              <span class="badge bg-light text-dark me-1">Delivery: ₹{{ shop.delivery_charge_per_km }}/km</span>
+            {% endif %}
+            {% if shop.offers_pickup %}
+              <span class="badge bg-light text-dark me-1">Pickup available</span>
+            {% endif %}
+            {% if not shop.offers_delivery and not shop.offers_pickup %}
+              <span class="text-muted">Not set</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <a class="btn btn-outline-primary btn-sm" href="{% url 'shops:shop_orders' %}?shop={{ shop.id }}">
+            <i class="fas fa-receipt me-1"></i>Shop Orders
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="card border-0 shadow-sm">
     <div class="card-body">
       <div class="table-responsive">

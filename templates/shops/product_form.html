@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}{% if mode == 'create' %}Add Product - Vstash{% else %}Edit Product - Vstash{% endif %}{% endblock %}
 {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body">
-          <h1 class="h4 mb-4">{% if mode == 'create' %}Add Product{% else %}Edit Product{% endif %}</h1>
+<div class="l-container u-py-5">
+  <div class="l-row u-justify-center">
+    <div class="l-col-lg-8">
+      <div class="c-card u-border-0 u-shadow-sm">
+        <div class="c-card-body">
+          <h1 class="u-h4 u-mb-4">{% if mode == 'create' %}Add Product{% else %}Edit Product{% endif %}</h1>
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row g-3">

@@ -73,6 +73,32 @@
         <a href="{% url 'shops:product_list' %}?shop={{ product.shop.id }}" class="btn btn-outline-secondary">
           More from this shop
         </a>
+        {% if product.in_stock %}
+          {% if not user.is_authenticated or user.user_type != 'shopkeeper' %}
+            {% if can_order %}
+              <form method="post" action="{% url 'shops:cart_add' product.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                </button>
+              </form>
+            {% else %}
+              <div>
+                <button type="button" class="btn btn-secondary" disabled>
+                  <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                </button>
+                {% if order_block_reason %}
+                  <div class="small text-muted mt-1">{{ order_block_reason }}</div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+          {% if not user.is_authenticated or user.user_type != 'shopkeeper' %}
+            <a href="{% url 'shops:cart_detail' %}" class="btn btn-outline-dark">View Cart</a>
+          {% endif %}
       </div>
     </div>
   </div>

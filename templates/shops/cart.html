@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+
+{% block title %}Cart - Vstash{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Your Cart</h1>
+      <p class="text-muted mb-0">Bill generated from selected items</p>
+      {% if cart_shop %}
+        <div class="text-muted small">Shop: {{ cart_shop.name }}</div>
+      {% endif %}
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'shops:product_list' %}" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left me-1"></i>Continue Shopping
+      </a>
+      {% if items %}
+      <form method="post" action="{% url 'shops:cart_clear' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger">Clear Cart</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if not items %}
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center py-5">
+        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+        <h5 class="mb-2">Your cart is empty</h5>
+        <p class="text-muted mb-0">Add products to generate a bill.</p>
+      </div>
+    </div>
+  {% else %}
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Shop</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Qty</th>
+                <th class="text-end">Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    {% if item.product.image %}
+                      <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="rounded" style="width: 52px; height: 52px; object-fit: cover;">
+                    {% else %}
+                      <div class="bg-light d-flex align-items-center justify-content-center rounded" style="width: 52px; height: 52px;">
+                        <i class="fas fa-box text-muted"></i>
+                      </div>
+                    {% endif %}
+                    <div class="ms-3">
+                      <div class="fw-semibold">{{ item.product.name }}</div>
+                      <div class="text-muted small">{{ item.product.category.name }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-muted">{{ item.product.shop.name }}</td>
+                <td class="text-end">₹{{ item.product.price }}</td>
+                <td class="text-end">
+                  <div class="d-inline-flex align-items-center gap-2">
+                    <form method="post" action="{% url 'shops:cart_update' item.product.id %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="dec">
+                      <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+                    </form>
+                    <span class="fw-semibold">{{ item.quantity }}</span>
+                    <form method="post" action="{% url 'shops:cart_update' item.product.id %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="inc">
+                      <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+                    </form>
+                  </div>
+                </td>
+                <td class="text-end fw-semibold">₹{{ item.line_total }}</td>
+                <td class="text-end">
+                  <form method="post" action="{% url 'shops:cart_remove' item.product.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-end">
+      <div class="col-md-5 col-lg-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h2 class="h5 mb-3">Bill</h2>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Items</span>
+              <span>{{ items|length }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Subtotal</span>
+              <span class="fw-semibold" id="bill-subtotal">₹{{ total }}</span>
+            </div>
+
+            <div class="d-flex justify-content-between mb-2" id="bill-delivery-row" style="display:none;">
+              <span class="text-muted">Delivery Fee</span>
+              <span class="fw-semibold" id="bill-delivery-fee">₹0.00</span>
+            </div>
+
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Total Amount</span>
+              <span class="fw-bold" id="bill-total">₹{{ total }}</span>
+            </div>
+            <hr>
+            <div class="small text-muted">Taxes/fees not calculated.</div>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mt-3">
+          <div class="card-body">
+            <h2 class="h5 mb-3">Place Order</h2>
+
+            {% if not cart_shop %}
+              <div class="text-muted">Add items to cart to place an order.</div>
+            {% else %}
+              {% if user.is_authenticated %}
+                <form method="post" action="{% url 'shops:place_order' %}">
+                  {% csrf_token %}
+
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="method" id="order-pickup" value="pickup"
+                           {% if can_pickup %}checked{% else %}disabled{% endif %}>
+                    <label class="form-check-label" for="order-pickup">
+                      Pickup (ready in ~{{ pickup_eta_min }} min)
+                    </label>
+                    {% if not can_pickup %}
+                      <div class="small text-muted">Pickup not available for this shop.</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="method" id="order-delivery" value="delivery"
+                           {% if can_delivery and delivery_eta_min %}{% if not can_pickup %}checked{% endif %}{% else %}disabled{% endif %}>
+                    <label class="form-check-label" for="order-delivery">
+                      Delivery
+                      {% if can_delivery and delivery_eta_min %}
+                        (arrives in ~{{ delivery_eta_min }} min)
+                      {% endif %}
+                    </label>
+                    {% if can_delivery %}
+                      {% if delivery_eta_min %}
+                        <div class="small text-muted">Distance: {{ delivery_distance_km|floatformat:1 }} km · Charge: ₹{{ cart_shop.delivery_charge_per_km }}/km</div>
+                      {% else %}
+                        <div class="small text-muted">Set your location to estimate delivery time.</div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-1" id="use-location-btn-cart">
+                          <i class="fas fa-location-crosshairs me-1"></i>Use my location
+                        </button>
+                      {% endif %}
+                    {% else %}
+                      <div class="small text-muted">Delivery not available for this shop.</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="d-grid mt-3">
+                    <button type="submit" class="btn btn-primary" {% if not can_pickup and not can_delivery %}disabled{% endif %}>
+                      Place Order
+                    </button>
+                  </div>
+                </form>
+              {% else %}
+                <div class="text-muted mb-2">Please login to place an order.</div>
+                <a class="btn btn-primary w-100" href="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}">Login to place order</a>
+              {% endif %}
+
+              <form method="post" action="{% url 'shops:set_location' %}" class="d-none" id="set-location-form-cart">
+                {% csrf_token %}
+                <input type="hidden" name="lat" id="cart-lat">
+                <input type="hidden" name="lng" id="cart-lng">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  function parseMoney(text) {
+    if (!text) return 0;
+    const n = parseFloat(String(text).replace(/[^0-9.\-]/g, ''));
+    return isNaN(n) ? 0 : n;
+  }
+
+  function formatMoney(n) {
+    return '₹' + (Math.round(n * 100) / 100).toFixed(2);
+  }
+
+  const btn = document.getElementById('use-location-btn-cart');
+  const form = document.getElementById('set-location-form-cart');
+  const latEl = document.getElementById('cart-lat');
+  const lngEl = document.getElementById('cart-lng');
+
+  const pickupRadio = document.getElementById('order-pickup');
+  const deliveryRadio = document.getElementById('order-delivery');
+  const deliveryRow = document.getElementById('bill-delivery-row');
+  const deliveryFeeEl = document.getElementById('bill-delivery-fee');
+  const subtotalEl = document.getElementById('bill-subtotal');
+  const totalEl = document.getElementById('bill-total');
+
+  const deliveryFeeEstimate = parseMoney("{% if delivery_fee_estimate %}₹{{ delivery_fee_estimate }}{% else %}₹0.00{% endif %}");
+
+  function refreshBill() {
+    if (!subtotalEl || !totalEl || !deliveryRow || !deliveryFeeEl) return;
+    const subtotal = parseMoney(subtotalEl.textContent);
+
+    const deliverySelected = deliveryRadio && deliveryRadio.checked;
+    const canApplyDeliveryFee = deliverySelected && deliveryFeeEstimate > 0;
+
+    if (canApplyDeliveryFee) {
+      deliveryRow.style.display = '';
+      deliveryFeeEl.textContent = formatMoney(deliveryFeeEstimate);
+      totalEl.textContent = formatMoney(subtotal + deliveryFeeEstimate);
+    } else {
+      deliveryRow.style.display = 'none';
+      deliveryFeeEl.textContent = formatMoney(0);
+      totalEl.textContent = formatMoney(subtotal);
+    }
+  }
+
+  if (pickupRadio) pickupRadio.addEventListener('change', refreshBill);
+  if (deliveryRadio) deliveryRadio.addEventListener('change', refreshBill);
+  refreshBill();
+
+  if (!btn || !form) return;
+
+  btn.addEventListener('click', function() {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported in this browser.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        if (latEl) latEl.value = pos.coords.latitude;
+        if (lngEl) lngEl.value = pos.coords.longitude;
+        form.submit();
+      },
+      () => {
+        alert('Unable to get location. Please allow location access and try again.');
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  });
+})();
+</script>
+{% endblock %}

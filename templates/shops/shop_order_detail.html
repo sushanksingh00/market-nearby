@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Shop Order #{{ order.id }} - Vstash{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Order #{{ order.id }}</h1>
+      <div class="text-muted small">Shop: {{ shop.name }}</div>
+      <div class="mt-1"><span class="badge bg-light text-dark">{{ order.get_status_display }}</span></div>
+    </div>
+    <a href="{% url 'shops:shop_orders' %}?shop={{ shop.id }}" class="btn btn-outline-primary">
+      <i class="fas fa-arrow-left me-1"></i>Back to Orders
+    </a>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Items</h2>
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th class="text-end">Price</th>
+                  <th class="text-end">Qty</th>
+                  <th class="text-end">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for it in items %}
+                <tr>
+                  <td class="fw-semibold">{{ it.product_name }}</td>
+                  <td class="text-end">₹{{ it.unit_price }}</td>
+                  <td class="text-end">{{ it.quantity }}</td>
+                  <td class="text-end fw-semibold">₹{{ it.line_total }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Order Info</h2>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Type</span>
+            <span class="fw-semibold">{{ order.get_method_display }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Placed</span>
+            <span>{{ order.created_at|date:"M d, Y H:i" }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Expected</span>
+            <span>
+              {% if order.expected_at %}
+                {{ order.expected_at|date:"M d, Y H:i" }}
+              {% else %}
+                -
+              {% endif %}
+            </span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">ETA</span>
+            <span>~{{ order.eta_minutes }} min</span>
+          </div>
+
+          <hr>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Customer</span>
+            <span>
+              {% if order.user %}
+                @{{ order.user.username }}
+              {% else %}
+                Guest
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Price</h2>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Subtotal</span>
+            <span>₹{{ order.subtotal }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Delivery Fee</span>
+            <span>₹{{ order.delivery_fee }}</span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <span class="fw-semibold">Total</span>
+            <span class="fw-bold">₹{{ order.total }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

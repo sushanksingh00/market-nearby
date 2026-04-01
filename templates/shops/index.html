@@ -10,7 +10,7 @@
                 <p class="lead mb-5">Discover local markets, fresh produce, and amazing deals in your neighborhood</p>
                 
                 <!-- Search Form -->
-                <form method="GET" action="{% url 'shops:shop_list' %}" class="row g-3 justify-content-center">
+                <form method="GET" action="{% url 'shops:shop_list' %}" class="row g-3 justify-content-center" id="home-search-form">
                     <div class="col-md-4">
                         <input type="text" name="search" class="form-control form-control-lg" 
                                placeholder="Search shops or products..." value="{{ search_query }}">
@@ -24,12 +24,23 @@
                             <i class="fas fa-search me-2"></i>Search
                         </button>
                     </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-outline-light btn-lg px-4" id="home-use-location">
+                                <i class="fas fa-location-crosshairs me-2"></i>Use my location
+                            </button>
+                        </div>
                 </form>
+
+                    <form method="POST" action="{% url 'shops:set_location' %}" id="home-set-location-form" class="d-none">
+                        {% csrf_token %}
+                        <input type="hidden" name="lat" id="home-post-lat">
+                        <input type="hidden" name="lng" id="home-post-lng">
+                        <input type="hidden" name="next" id="home-next">
+                    </form>
             </div>
         </div>
     </div>
 </section>
-
 <!-- Categories Section -->
 <section class="py-5 bg-light">
     <div class="container">
@@ -205,4 +216,45 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const btn = document.getElementById('home-use-location');
+    const form = document.getElementById('home-search-form');
+    const postForm = document.getElementById('home-set-location-form');
+    const postLat = document.getElementById('home-post-lat');
+    const postLng = document.getElementById('home-post-lng');
+    const nextInput = document.getElementById('home-next');
+    if (!btn || !form || !postForm || !postLat || !postLng || !nextInput) return;
+
+    btn.addEventListener('click', function() {
+        if (!navigator.geolocation) {
+            form.submit();
+            return;
+        }
+        btn.disabled = true;
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                postLat.value = pos.coords.latitude;
+                postLng.value = pos.coords.longitude;
+                // Redirect back to shop list with the current GET params, but without lat/lng.
+                const actionUrl = form.getAttribute('action') || '{% url "shops:shop_list" %}';
+                const params = new URLSearchParams(new FormData(form));
+                params.delete('lat');
+                params.delete('lng');
+                const nextUrl = params.toString() ? `${actionUrl}?${params.toString()}` : actionUrl;
+                nextInput.value = nextUrl;
+                postForm.submit();
+            },
+            () => {
+                btn.disabled = false;
+                form.submit();
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+        );
+    });
+})();
+</script>
 {% endblock %}

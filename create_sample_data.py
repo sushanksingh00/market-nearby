@@ -82,6 +82,8 @@ shops_data = [
         'name': 'Green Valley Vegetables',
         'address': '123 Market Street, Downtown',
         'phone': '+91 98765 43210',
+        'latitude': Decimal('12.971600'),
+        'longitude': Decimal('77.594600'),
         'is_open': True,
         'rating': Decimal('4.5'),
         'categories': [vegetables_cat, fruits_cat, organic_cat]
@@ -90,6 +92,8 @@ shops_data = [
         'name': 'Fresh Daily Market',
         'address': '456 Garden Road, Central',
         'phone': '+91 98765 43211',
+        'latitude': Decimal('12.975200'),
+        'longitude': Decimal('77.605000'),
         'is_open': True,
         'rating': Decimal('4.3'),
         'categories': [groceries_cat, dairy_cat]
@@ -98,6 +102,8 @@ shops_data = [
         'name': 'Golden Bakery',
         'address': '789 Bread Lane, Old Town',
         'phone': '+91 98765 43212',
+        'latitude': Decimal('12.965000'),
+        'longitude': Decimal('77.580000'),
         'is_open': False,
         'rating': Decimal('4.7'),
         'categories': [bakery_cat]

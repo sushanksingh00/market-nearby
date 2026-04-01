@@ -16,8 +16,8 @@ class ShopCategoryInline(admin.TabularInline):
 
 @admin.register(Shop)
 class ShopAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner', 'address', 'phone', 'is_open', 'rating', 'created_at')
-    list_filter = ('is_open', 'created_at', 'rating')
+    list_display = ('name', 'owner', 'address', 'phone', 'is_open', 'offers_delivery', 'offers_pickup', 'delivery_charge_per_km', 'rating', 'created_at')
+    list_filter = ('is_open', 'offers_delivery', 'offers_pickup', 'created_at', 'rating')
     search_fields = ('name', 'owner__username', 'address')
     inlines = [ShopCategoryInline]
     readonly_fields = ('created_at', 'updated_at')
