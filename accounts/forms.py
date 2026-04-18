@@ -8,13 +8,11 @@ class ProfileForm(forms.ModelForm):
         model = User
         fields = [
             'first_name',  # name
-            'profile_picture',  # photo
             'address',  # bio (reusing existing field)
         ]
         labels = {
             'first_name': 'Name',
             'address': 'Bio',
-            'profile_picture': 'Photo',
         }
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),

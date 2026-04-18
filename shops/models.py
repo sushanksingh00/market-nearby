@@ -12,7 +12,6 @@ class Shop(models.Model):
     phone = models.CharField(max_length=15)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    image = models.ImageField(upload_to='shops/', blank=True, null=True)
     is_open = models.BooleanField(default=True)
     opening_time = models.TimeField(null=True, blank=True)
     closing_time = models.TimeField(null=True, blank=True)
@@ -51,15 +50,6 @@ class Shop(models.Model):
         except (TypeError, ValueError):
             return ""
 
-    @property
-    def image_url(self):
-        if self.image:
-            try:
-                if self.image.storage.exists(self.image.name):
-                    return self.image.url
-            except Exception:
-                pass
-        return '/static/assets/vegetable-shop.jpg'
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -87,7 +77,6 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    image = models.ImageField(upload_to='products/', blank=True, null=True)
     description = models.TextField(blank=True)
     in_stock = models.BooleanField(default=True)
     stock_quantity = models.PositiveIntegerField(default=0)
@@ -104,16 +93,6 @@ class Product(models.Model):
         if self.original_price and self.original_price > self.price:
             return int(((self.original_price - self.price) / self.original_price) * 100)
         return 0
-
-    @property
-    def image_url(self):
-        if self.image:
-            try:
-                if self.image.storage.exists(self.image.name):
-                    return self.image.url
-            except Exception:
-                pass
-        return '/static/assets/bread.jpg'
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')

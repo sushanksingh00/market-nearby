@@ -801,7 +801,7 @@ def shop_create(request):
         return redirect('shops:index')
 
     if request.method == 'POST':
-        form = ShopForm(request.POST, request.FILES)
+        form = ShopForm(request.POST)
         if form.is_valid():
             shop = form.save(commit=False)
             shop.owner = request.user
@@ -873,7 +873,7 @@ def product_create(request):
     shop = get_object_or_404(Shop, id=shop_id, owner=request.user)
 
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, shop=shop)
+        form = ProductForm(request.POST, shop=shop)
         if form.is_valid():
             form.save()
             messages.success(request, 'Product added successfully.')
@@ -890,7 +890,7 @@ def product_update(request, pk):
     product = get_object_or_404(Product, pk=pk, shop__owner=request.user)
     shop = product.shop
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product, shop=shop)
+        form = ProductForm(request.POST, instance=product, shop=shop)
         if form.is_valid():
             form.save()
             messages.success(request, 'Product updated successfully.')

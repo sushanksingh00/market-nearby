@@ -11,7 +11,6 @@ class ShopForm(forms.ModelForm):
             'phone',
             'latitude',
             'longitude',
-            'image',
             'is_open',
             'opening_time',
             'closing_time',
@@ -44,7 +43,7 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = [
             'name', 'category', 'price', 'original_price',
-            'description', 'in_stock', 'stock_quantity', 'image'
+            'description', 'in_stock', 'stock_quantity'
         ]
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),

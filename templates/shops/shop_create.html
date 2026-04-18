@@ -15,7 +15,7 @@
 
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data" id="shop-create-form">
+                    <form method="post" id="shop-create-form">
                         {% csrf_token %}
 
                         <div class="row g-3">
@@ -52,12 +52,6 @@
                                 <label class="form-label">Longitude</label>
                                 {{ form.longitude }}
                                 {% if form.longitude.errors %}<div class="text-danger small">{{ form.longitude.errors }}</div>{% endif %}
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">Shop Image (Optional)</label>
-                                {{ form.image }}
-                                {% if form.image.errors %}<div class="text-danger small">{{ form.image.errors }}</div>{% endif %}
                             </div>
 
                             <div class="col-md-6">

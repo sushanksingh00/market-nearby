@@ -6,7 +6,6 @@ erDiagram
     varchar user_type
     varchar phone
     text address
-    varchar profile_picture
   }
 
   SHOPS_SHOP {
@@ -16,7 +15,6 @@ erDiagram
     varchar phone
     decimal latitude
     decimal longitude
-    varchar image
     boolean is_open
     time opening_time
     time closing_time
@@ -44,7 +42,6 @@ erDiagram
     varchar name
     decimal price
     decimal original_price
-    varchar image
     text description
     boolean in_stock
     int stock_quantity
