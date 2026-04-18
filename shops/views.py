@@ -21,6 +21,15 @@ ORDER_RADIUS_KM = 10.0
 def _get_user_lat_lng(request):
     lat = parse_float(request.session.get('user_lat'))
     lng = parse_float(request.session.get('user_lng'))
+
+    # Fallback to cookies if session values are missing.
+    if lat is None or lng is None:
+        c_lat = parse_float(request.COOKIES.get('user_lat'))
+        c_lng = parse_float(request.COOKIES.get('user_lng'))
+        if c_lat is not None and c_lng is not None:
+            lat, lng = c_lat, c_lng
+            request.session['user_lat'] = lat
+            request.session['user_lng'] = lng
     return lat, lng
 
 
@@ -527,12 +536,20 @@ def set_location(request):
     # Only allow relative redirects and strip lat/lng from query params.
     parsed = urlparse(next_url)
     if parsed.scheme or parsed.netloc:
-        return redirect('shops:shop_list')
+        response = redirect('shops:shop_list')
+        if lat is not None and lng is not None:
+            response.set_cookie('user_lat', str(lat), max_age=60 * 60 * 24 * 30, samesite='Lax')
+            response.set_cookie('user_lng', str(lng), max_age=60 * 60 * 24 * 30, samesite='Lax')
+        return response
 
     kept = [(k, v) for (k, v) in parse_qsl(parsed.query, keep_blank_values=True) if k not in {'lat', 'lng'}]
     clean_query = urlencode(kept)
     clean = urlunparse(("", "", parsed.path or reverse('shops:shop_list'), parsed.params, clean_query, parsed.fragment))
-    return redirect(clean)
+    response = redirect(clean)
+    if lat is not None and lng is not None:
+        response.set_cookie('user_lat', str(lat), max_age=60 * 60 * 24 * 30, samesite='Lax')
+        response.set_cookie('user_lng', str(lng), max_age=60 * 60 * 24 * 30, samesite='Lax')
+    return response
 
 def index(request):
     """Main page showing shops and products"""
