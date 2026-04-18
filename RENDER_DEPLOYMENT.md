@@ -10,6 +10,18 @@ Your Django app is now optimized for deploying to **Render.com free tier** witho
 
 ## Step-by-Step Deployment
 
+## Render Commands (Use Exactly These)
+
+- **Build Command**
+  ```bash
+  pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
+  ```
+
+- **Start Command**
+  ```bash
+  gunicorn market_nearby.wsgi:application
+  ```
+
 ### 1. Create PostgreSQL Database on Render
 
 1. Go to [render.com](https://render.com)
@@ -26,11 +38,11 @@ Your Django app is now optimized for deploying to **Render.com free tier** witho
 4. Set the following:
    - **Name**: market-nearby (or your choice)
    - **Environment**: Python 3
-   - **Build Command**: 
+   - **Build Command**:
      ```
      pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput
      ```
-   - **Start Command**: 
+   - **Start Command**:
      ```
      gunicorn market_nearby.wsgi:application
      ```

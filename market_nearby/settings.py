@@ -164,3 +164,10 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 CSRF_TRUSTED_ORIGINS = [x.strip() for x in config('CSRF_TRUSTED_ORIGINS', default='').split(',') if x.strip()]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(default='postgresql://localhost/market_nearby', conn_max_age=600)
+}
