@@ -588,6 +588,7 @@ def index(request):
 def shop_list(request):
     """List all shops with filtering and searching"""
     shops = Shop.objects.select_related('owner').prefetch_related('categories__category')
+    matching_products = Product.objects.none()
     
     # Search functionality
     search_query = request.GET.get('search', '')
@@ -640,6 +641,24 @@ def shop_list(request):
         shops_list.sort(key=lambda s: getattr(s, 'distance_km', float('inf')))
     else:
         messages.info(request, 'Share your location to see shops within 10 km.')
+
+    if search_query:
+        matching_products = Product.objects.select_related('shop', 'category').filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query) |
+            Q(shop__name__icontains=search_query) |
+            Q(category__name__icontains=search_query)
+        )
+
+        if category_id:
+            matching_products = matching_products.filter(category_id=category_id)
+
+        # Keep product matches aligned with currently visible shop scope.
+        if shops_list is not None:
+            visible_shop_ids = [shop.id for shop in shops_list]
+            matching_products = matching_products.filter(shop_id__in=visible_shop_ids)
+
+        matching_products = matching_products.order_by('-created_at')[:12]
     
     # Pagination
     paginator = Paginator(shops_list if shops_list is not None else shops, 12)
@@ -651,6 +670,7 @@ def shop_list(request):
     context = {
         'page_obj': page_obj,
         'categories': categories,
+        'matching_products': matching_products,
         'search_query': search_query,
         'selected_category': category_id,
         'location': location,
