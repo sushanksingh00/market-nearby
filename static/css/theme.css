@@ -163,14 +163,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Product and shop cards */
-.product-card .card-img-top {
-    height: 200px;
-    object-fit: cover;
+.entity-mark {
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.6rem;
+    background-color: var(--background-light);
+    color: var(--text-light);
+    flex: 0 0 auto;
 }
 
-.shop-card .card-img-top {
-    height: 250px;
-    object-fit: cover;
+.entity-mark-sm {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
 }
 
 /* Ratings */
