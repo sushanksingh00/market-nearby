@@ -51,6 +51,16 @@ class Shop(models.Model):
         except (TypeError, ValueError):
             return ""
 
+    @property
+    def image_url(self):
+        if self.image:
+            try:
+                if self.image.storage.exists(self.image.name):
+                    return self.image.url
+            except Exception:
+                pass
+        return '/static/assets/vegetable-shop.jpg'
+
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
@@ -94,6 +104,16 @@ class Product(models.Model):
         if self.original_price and self.original_price > self.price:
             return int(((self.original_price - self.price) / self.original_price) * 100)
         return 0
+
+    @property
+    def image_url(self):
+        if self.image:
+            try:
+                if self.image.storage.exists(self.image.name):
+                    return self.image.url
+            except Exception:
+                pass
+        return '/static/assets/bread.jpg'
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
